@@ -2,7 +2,7 @@
 
 - Name/Surname: Sasithorn Srijun
 - Student ID: 64070106
-- GitHub repository URL:
+- GitHub repository URL: https://github.com/sasithornmai/NPA2023-Final-Example.git
 
 ## Instruction
 

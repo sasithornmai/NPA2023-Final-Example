@@ -24,7 +24,7 @@ accessToken = "MjI5MWMyODYtZmIzNi00OTI4LWEwYjYtN2MyY2ZmYjlmMTIyZmVmYWRiYjEtMzA2_
 # 3. Prepare GetParameters to get the latest message for messages API.
 
 # Defines a variable that will hold the roomId 
-roomIdToGetMessages = "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTg5ZjBiZDAtZGVkOS0xMWVlLTk3MDYtMjE4YzMzZjdjNmFk" 
+roomIdToGetMessages = "Y2lzY29zcGFyazovL3VzL1JPT00vZjBkZjY0NDAtYWU5Yi0xMWVlLTg5MGMtMGQzNjUwOTJlMmUy" 
 
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
@@ -123,7 +123,7 @@ while True:
 #######################################################################################
 # 10. Complete the code to get weather description and weather temperature
         weather_desc = json_data_weather["weather"][0]["description"]
-        weather_temp = float(json_data_weather["main"]["temp"])- 273.15
+        weather_temp = round((float(json_data_weather["main"]["temp"])- 273.15), 2)
 
 #######################################################################################
 # 11. Complete the code to format the response message.
@@ -142,7 +142,7 @@ while True:
         # - "roomId" is is ID of the selected room
         # - "text": is the responseMessage assembled above
         PostData = {
-                            "roomId": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTg5ZjBiZDAtZGVkOS0xMWVlLTk3MDYtMjE4YzMzZjdjNmFk",
+                            "roomId": "Y2lzY29zcGFyazovL3VzL1JPT00vZjBkZjY0NDAtYWU5Yi0xMWVlLTg5MGMtMGQzNjUwOTJlMmUy",
                             "text": responseMessage
                         }
         # Post the call to the Webex Teams message API.

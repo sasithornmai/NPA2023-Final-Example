@@ -11,7 +11,7 @@
 # 1. Import libraries for API requests, JSON formatting, and time.
 
 import requests  # Library for making HTTP requests
-# import json      # Library for working with JSON data
+import json      # Library for working with JSON data
 import time      # Library for time-related functions
 from sent_message import sent_message
 
@@ -25,7 +25,7 @@ accessToken = "MDYwZmM5ZDMtYmZjYy00MWVkLTg1NDAtYzk2MjU3ZDUxY2IyOTMwYmE3NWYtMDYy_
 # 3. Prepare GetParameters to get the latest message for messages API.
 
 # Defines a variable that will hold the roomId 
-roomIdToGetMessages = "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTg5ZjBiZDAtZGVkOS0xMWVlLTk3MDYtMjE4YzMzZjdjNmFk" 
+roomIdToGetMessages = "Y2lzY29zcGFyazovL3VzL1JPT00vZjBkZjY0NDAtYWU5Yi0xMWVlLTg5MGMtMGQzNjUwOTJlMmUy" 
 
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
@@ -96,7 +96,7 @@ while True:
         # check if the status key in the returned JSON data is "0"
         if not r.status_code == 200:
             responseMessage = "Dear {}\nI am sorry, I cannot found {}. Please type location in List of ISO 3166 country codes".format(Name, location)
-            sent_message(accessToken, responseMessage)
+            sent_message(accessToken, responseMessage, roomIdToGetMessages)
             raise Exception("Incorrect reply from OpenWeather Geocoding API. Status code: {}".format(r.status_code))
 
 #######################################################################################
@@ -123,7 +123,7 @@ while True:
 
         if not "weather" in json_data_weather:
             responseMessage = "Dear {}\nI am sorry, I cannot found the weather in {}.".format(Name, location)
-            sent_message(accessToken, responseMessage)
+            sent_message(accessToken, responseMessage, roomIdToGetMessages)
             raise Exception("Incorrect reply from openweathermap API. Status code: {}. Text: {}".format(rw.status_code, rw.text))
 
 #######################################################################################
@@ -140,4 +140,4 @@ while True:
 #######################################################################################
 # 12. Complete the code to post the message to the Webex Teams room.         
         # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
-        sent_message(accessToken, responseMessage)
+        sent_message(accessToken, responseMessage, roomIdToGetMessages)

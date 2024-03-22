@@ -3,7 +3,7 @@
 import requests
 import json  
 
-def sent_message(accessToken, responseMessage):
+def sent_message(accessToken, responseMessage, roomId):
         HTTPHeaders = { 
                              "Authorization": f"Bearer {accessToken}",
                              "Content-Type": "application/json"
@@ -12,7 +12,7 @@ def sent_message(accessToken, responseMessage):
         # - "roomId" is is ID of the selected room
         # - "text": is the responseMessage assembled above
         PostData = {
-                            "roomId": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTg5ZjBiZDAtZGVkOS0xMWVlLTk3MDYtMjE4YzMzZjdjNmFk",
+                            "roomId": roomId,
                             "text": responseMessage
                         }
         # Post the call to the Webex Teams message API.

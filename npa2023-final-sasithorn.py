@@ -11,20 +11,21 @@
 # 1. Import libraries for API requests, JSON formatting, and time.
 
 import requests  # Library for making HTTP requests
-import json      # Library for working with JSON data
+# import json      # Library for working with JSON data
 import time      # Library for time-related functions
+from sent_message import sent_message
 
 #######################################################################################
 # 2. Assign the Webex hard-coded access token to the variable accessToken.
 
 
-accessToken = "MjI5MWMyODYtZmIzNi00OTI4LWEwYjYtN2MyY2ZmYjlmMTIyZmVmYWRiYjEtMzA2_P0A1_7e57d048-2511-4d53-8dd4-05fe61659f5d" 
+accessToken = "MDYwZmM5ZDMtYmZjYy00MWVkLTg1NDAtYzk2MjU3ZDUxY2IyOTMwYmE3NWYtMDYy_P0A1_7e57d048-2511-4d53-8dd4-05fe61659f5d" 
 
 #######################################################################################
 # 3. Prepare GetParameters to get the latest message for messages API.
 
 # Defines a variable that will hold the roomId 
-roomIdToGetMessages = "Y2lzY29zcGFyazovL3VzL1JPT00vZjBkZjY0NDAtYWU5Yi0xMWVlLTg5MGMtMGQzNjUwOTJlMmUy" 
+roomIdToGetMessages = "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vMTg5ZjBiZDAtZGVkOS0xMWVlLTk3MDYtMjE4YzMzZjdjNmFk" 
 
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
@@ -69,6 +70,7 @@ while True:
         # extract name of a location (city) where we check for GPS coordinates using the OpenWeather Geocoding API
         # Enter code below to hold city name in location variable.
         # For example location should be "San Jose" if the message is "/chotipat San Jose".
+        Name = message[1:message.find(" ")]
         location = message.split(" ", 1)[1]
 
 #######################################################################################     
@@ -93,6 +95,8 @@ while True:
         json_data = r.json()
         # check if the status key in the returned JSON data is "0"
         if not r.status_code == 200:
+            responseMessage = "Dear {}\nI am sorry, I cannot found {}. Please type location in List of ISO 3166 country codes".format(Name, location)
+            sent_message(accessToken, responseMessage)
             raise Exception("Incorrect reply from OpenWeather Geocoding API. Status code: {}".format(r.status_code))
 
 #######################################################################################
@@ -118,6 +122,8 @@ while True:
         json_data_weather = rw.json()
 
         if not "weather" in json_data_weather:
+            responseMessage = "Dear {}\nI am sorry, I cannot found the weather in {}.".format(Name, location)
+            sent_message(accessToken, responseMessage)
             raise Exception("Incorrect reply from openweathermap API. Status code: {}. Text: {}".format(rw.status_code, rw.text))
 
 #######################################################################################
@@ -128,27 +134,10 @@ while True:
 #######################################################################################
 # 11. Complete the code to format the response message.
         # Example responseMessage result: In Austin, Texas (latitude: 30.264979, longitute: -97.746598), the current weather is clear sky and the temperature is 12.61 degree celsius.
-        responseMessage = "In {} (latitude: {}, longitute: {}), the current weather is {} and the temperature is {} degree celsius.\n".format(location, locationLat, locationLng, weather_desc, weather_temp)
+        responseMessage = "Dear {}\nIn {} (latitude: {}, longitute: {}),\nThe current weather is {} and the temperature is {} degree celsius.\n".format(Name, location, locationLat, locationLng, weather_desc, weather_temp)
         # print("Sending to Webex Teams: " + responseMessage)
 
 #######################################################################################
 # 12. Complete the code to post the message to the Webex Teams room.         
         # the Webex Teams HTTP headers, including the Authoriztion and Content-Type
-        HTTPHeaders = { 
-                             "Authorization": f"Bearer {accessToken}",
-                             "Content-Type": "application/json"
-                           }
-        # The Webex Teams POST JSON data
-        # - "roomId" is is ID of the selected room
-        # - "text": is the responseMessage assembled above
-        PostData = {
-                            "roomId": "Y2lzY29zcGFyazovL3VzL1JPT00vZjBkZjY0NDAtYWU5Yi0xMWVlLTg5MGMtMGQzNjUwOTJlMmUy",
-                            "text": responseMessage
-                        }
-        # Post the call to the Webex Teams message API.
-        r = requests.post( "https://webexapis.com/v1/messages", 
-                              data = json.dumps(PostData), 
-                              headers = HTTPHeaders
-                         )
-        if not r.status_code == 200:
-            raise Exception("Incorrect reply from Webex Teams API. Status code: {}. Text: {}".format(r.status_code, r.text))
+        sent_message(accessToken, responseMessage)
